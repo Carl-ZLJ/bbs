@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>zhu的论坛</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/lib/editor/editor.css">
+    <link rel="stylesheet" href="/static/lib/webuploader/webuploader.css">
+    <script src="/static/lib/jquery-3.0.0.min.js"></script>
+    <script src="/static/lib/markdownit.js"></script>
+    <script src="/static/lib/webuploader/webuploader.withoutimage.js"></script>
+    <script src="/static/lib/editor/editor.js"></script>
+    <script src="/static/lib/editor/ext.js"></script>
+    <script src="//cdn.bootcss.com/marked/0.3.6/marked.min.js"></script>
+</head>
+<body>
+<div id="main">
+    <div id='sidebar'>
+        <div class='panel'>
+            <div class='header'>
+                <span class='col_fade'>作者</span>
+            </div>
+            <div class='inner'>
+                <div class='user_card'>
+                    <div>
+                        <a class='user_avatar' href="{{ topic.user().user_image }}">
+                            <img src="{{ topic.user().user_image }}">
+                        </a>
+                        <span class='user_name'>
+                            <a class='dark'
+                               href="{{ url_for('index.profile', uid=topic.user().id) }}">
+                                {{ topic.user().username }}
+                            </a>
+                        </span>
+
+                    <div class='board clearfix'>
+                        <div class='floor'>
+                            <span class='big'></span>
+                        </div>
+                    </div>
+                        <div class="space clearfix"></div>
+                        <span class="signature">
+                            “
+                            狼叔说：少抱怨，多思考，未来更美好
+                            ”
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="content">
+        <div class='panel'>
+            <div class='header topic_header'>
+            <span class="topic_full_title">
+                {{ topic.title }}
+            </span>
+                <div class="changes">
+            <span class="topic_time" id="{{ topic.created_time }}">
+            </span>
+            <span>
+                作者:
+                <a href="{{ url_for('index.profile', uid=topic.user_id) }}">{{ topic.user().username }}</a>
+            </span>
+            <span>
+                {{ topic.views }} 次浏览
+            </span>
+            <span>
+                来自:
+                <a href="{{ url_for('topic.index', board_id=topic.board_id) }}">{{ topic.board().title }}</a>
+            </span>
+                </div>
+            </div>
+
+            <div class='inner topic'>
+                <div class='topic_content'>
+                    <div class="markdown-text">{{ topic.content }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class='panel'>
+            <div class='header'>
+                <span class='col_fade'>
+                    <!-- 过滤器 -->
+                    {{ topic.replies() | count }} 回复
+                </span>
+            </div>
+            {% for r in topic.replies() %}
+                {% set u = r.user() %}
+            <div class='cell reply_area reply_item'>
+                <div class='author_content'>
+                    <a class="user_avatar">
+                        <img src="{{ u.user_image }}"
+                             title="{{ u.username }}"/>
+                    </a>
+                    <div class='user_info'>
+                        <a href="{{ url_for('index.profile', uid=u.id) }}" class='dark reply_author'>
+                            {{ u.username }}
+                        </a>
+                        <a class="reply_much">
+                            {{ loop.index }}楼
+                        </a>
+                        <a class="reply_time" id="{{ r.created_time }}"></a>
+                    </div>
+                    <div class='user_action'>
+                        <span>
+                            <i class="fa up_btn
+                              fa-thumbs-o-up
+                              invisible" title="喜欢"></i>
+                            <span class="up-count">
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class='reply_content'>
+                    <div class="markdown-text">{{ r.content }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class='panel'>
+            <div class='header'>
+                <span class='col_fade'>添加回复</span>
+            </div>
+            <form action="{{ url_for('reply.add') }}" method="post">
+                <div class='markdown_editor in_editor'>
+                    <div class='markdown_in_editor'>
+                        <textarea class='editor markdown-text' name='content' rows="10"></textarea>
+                        <input type="hidden" name="topic_id" value="{{ topic.id }}">
+                        <button class='span-primary submit_btn' >提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+var initedEditor = function() {
+    var e = new Editor()
+    var element = $('.editor').get(0)
+    e.render(element)
+    return e
+}
+
+var e = function (sel) {
+    return document.querySelector(sel)
+}
+
+var es = function (sel) {
+    return document.querySelectorAll(sel)
+}
+
+var replyTime = function () {
+    var times = es('.reply_time')
+    for(var i = 0; i < times.length; i++) {
+        var t = times[i]
+        var time = Number(t.id)
+        var timeStamp = new Date(time * 1000)
+        t.innerHTML = timeStamp.toLocaleString()
+    }
+}
+
+var topicTime = function () {
+    var timeContent = e('.topic_time')
+    var t = Number(timeContent.id)
+    var timeStamp = new Date(t * 1000)
+    timeContent.innerHTML = timeStamp.toLocaleString()
+}
+
+var markContents = function() {
+    var contentDivs = es('.markdown-text')
+    for(var i=0; i<contentDivs.length; i++) {
+        var contentDiv = contentDivs[i]
+        var content = marked(contentDiv.innerHTML)
+        console.log('content', content)
+        contentDiv.innerHTML = content
+    }
+}
+
+var __main = function() {
+    initedEditor()
+    replyTime()
+    topicTime()
+    markContents()
+}
+
+$(document).ready(function() {
+    __main()
+})
+</script>
+</body>
+</html>
