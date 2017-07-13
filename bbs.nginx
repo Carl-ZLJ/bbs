@@ -1,6 +1,6 @@
 server {
         listen 443;
-        server_name zljmms32.com; #填写绑定证书的域名
+        server_name www.zljmms32.com; #填写绑定证书的域名
         ssl on;
         ssl_certificate 1_zljmms32.com_bundle.crt;
         ssl_certificate_key 2_zljmms32.com.key;
@@ -21,6 +21,6 @@ server {
     }
 server {
     listen 80 default_server;
-    server_name zljmms32.com;
+    server_name www.zljmms32.com;
     return 301 https://$server_name$request_uri;
 }
