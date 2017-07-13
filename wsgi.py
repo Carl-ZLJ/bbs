@@ -15,6 +15,7 @@ ln -s /var/www/bbs/bbs.conf /etc/supervisor/conf.d/bbs.conf
 
 ln -s /var/www/bbs/bbs.nginx /etc/nginx/sites-enabled/bbs default要删掉
 
+ln -s /var/www/bbs/mongodb.conf /etc/supervisor/conf.d/mongo.conf
 
 
 ➜  ~ cat /etc/supervisor/conf.d/bbs.conf
