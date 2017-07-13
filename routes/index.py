@@ -75,6 +75,7 @@ def profile(uid):
 
 
 def allow_file(filename):
+    # 后缀名
     suffix = filename.split('.')[-1]
     from config import accept_user_file_type
     return suffix in accept_user_file_type
