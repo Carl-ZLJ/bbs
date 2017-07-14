@@ -23,7 +23,13 @@ server {
         }
     }
 server {
+    listen 443 ssl;
+    server_name zljmms32.com;
+    return 301 https://www.zljmms32.com$request_uri;
+}
+
+server {
     listen 80;
-    server_name zljmms32.com www.zljmms32.com;
+    server_name www.zljmms32.com zljmms32.com;
     return 301 https://www.zljmms32.com$request_uri;
     }
