@@ -24,6 +24,6 @@ server {
     }
 server {
     listen 80;
-    server_name www.zljmms32.com
-    rewrite ^ https://$http_host$request_uri? permanent;
+    server_name zljmms32.com www.zljmms32.com;
+    return 301 https://www.zljmms32.com$request_uri;
     }
