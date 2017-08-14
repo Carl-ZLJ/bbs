@@ -1,24 +1,14 @@
-# from models import Model
 from models.mongua import Mongua
 
 Model = Mongua
 
 
 class User(Model):
-    """
-    User 是一个保存用户数据的 model
-    现在只有两个属性 username 和 password
-    """
     __fields__ = Mongua.__fields__ + [
         ('username', str, ''),
         ('password', str, ''),
         ('user_image', str, '/uploads/default.png'),
     ]
-    # def __init__(self, form):
-    #     self.id = form.get('id', None)
-    #     self.username = form.get('username', '')
-    #     self.password = form.get('password', '')
-    #     self.user_image = 'default.png'
 
     def salted_password(self, password, salt='$!@><?>HUI&DWQa`'):
         import hashlib
@@ -28,14 +18,6 @@ class User(Model):
         hash1 = sha256(password)
         hash2 = sha256(hash1 + salt)
         return hash2
-
-    def hashed_password(self, pwd):
-        import hashlib
-        # 用 ascii 编码转换成 bytes 对象
-        p = pwd.encode('ascii')
-        s = hashlib.sha256(p)
-        # 返回摘要字符串
-        return s.hexdigest()
 
     @classmethod
     def register(cls, form):

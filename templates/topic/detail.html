@@ -85,10 +85,10 @@
             <div class='header'>
                 <span class='col_fade'>
                     <!-- 过滤器 -->
-                    {{ topic.replies() | count }} 回复
+                    {{ replies | count }} 回复
                 </span>
             </div>
-            {% for r in topic.replies() %}
+            {% for r in replies %}
                 {% set u = r.user() %}
             <div class='cell reply_area reply_item'>
                 <div class='author_content'>
@@ -97,12 +97,9 @@
                              title="{{ u.username }}"/>
                     </a>
                     <div class='user_info'>
-                        <a href="{{ url_for('index.profile', uid=u.id) }}" class='dark reply_author'>
-                            {{ u.username }}
-                        </a>
-                        <a class="reply_much">
-                            {{ loop.index }}楼
-                        </a>
+                        <a href="{{ url_for('index.profile', uid=u.id) }}"
+                           class='dark reply_author'>{{ u.username }}</a>
+                        <a class="reply_much">{{ loop.index }}楼</a>
                         <a class="reply_time" id="{{ r.created_time }}"></a>
                     </div>
                     <div class='user_action'>

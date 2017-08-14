@@ -30,6 +30,7 @@ server {
 
 server {
     listen 80;
+#    将80端口的http请求都转到https
     server_name www.zljmms32.com zljmms32.com;
     return 301 https://www.zljmms32.com$request_uri;
     }

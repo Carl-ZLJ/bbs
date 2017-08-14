@@ -43,10 +43,7 @@ class Mongua(object):
     @classmethod
     def has(cls, **kwargs):
         """
-        检查一个元素是否在数据库中 用法如下
-        User.has(id=1)
-        :param kwargs:
-        :return:
+        检查一个元素是否在数据库中
         """
         return cls.find_one(**kwargs) is not None
 
@@ -61,18 +58,14 @@ class Mongua(object):
         new 是给外部使用的函数
         """
         name = cls.__name__
-        # 创建一个空对象
         m = cls()
-        # 把定义的数据写入空对象, 未定义的数据输出错误
         fields = cls.__fields__.copy()
-        # 去掉 _id 这个特殊的字段
         fields.remove('_id')
         if form is None:
             form = {}
 
         for f in fields:
             k, t, v = f
-            # 如果form中包含k这个key，那么需要更新 m.k = t(form[k])
             if k in form:
                 # setattr(x, y, z) => x.y = z
                 setattr(m, k, t(form[k]))
@@ -91,10 +84,7 @@ class Mongua(object):
         ts = int(time.time())
         m.created_time = ts
         m.updated_time = ts
-        # m.deleted = False
         m.type = name.lower()
-        # 特殊 model 的自定义设置
-        # m._setup(form)
         m.save()
         return m
 
@@ -106,7 +96,6 @@ class Mongua(object):
         """
         m = cls()
         fields = cls.__fields__.copy()
-        # 去掉 _id 这个特殊的字段
         fields.remove('_id')
         for f in fields:
             k, t, v = f
@@ -115,33 +104,22 @@ class Mongua(object):
             else:
                 # 设置默认值
                 setattr(m, k, v)
-        # 这一句必不可少，否则 bson 生成一个新的_id
+        # 还原 bson 的_id
         setattr(m, '_id', bson['_id'])
         return m
 
     @classmethod
     def all(cls):
-        # 按照 id 升序排序
-        # name = cls.__name__
-        # ds = mongua.db[name].find()
-        # l = [cls._new_with_bson(d) for d in ds]
-        # return l
         return cls._find()
 
-    # TODO, 还应该有一个函数 find(name, **kwargs)
     @classmethod
     def _find(cls, **kwargs):
         """
         mongo 数据查询
         """
         name = cls.__name__
-        # TODO 过滤掉被删除的元素
         kwargs['deleted'] = False
-        flag_sort = '__sort'
-        sort = kwargs.pop(flag_sort, None)
         ds = mongua.db[name].find(kwargs)
-        if sort is not None:
-            ds = ds.sort(sort)
         l = [cls._new_with_bson(d) for d in ds]
         return l
 
@@ -163,10 +141,7 @@ class Mongua(object):
 
     @classmethod
     def find_one(cls, **kwargs):
-        """
-        """
-        # TODO 过滤掉被删除的元素
-        # kwargs['deleted'] = False
+        kwargs['deleted'] = False
         l = cls._find(**kwargs)
         # print('find one debug', kwargs, l)
         # 找第一条数据
@@ -207,10 +182,8 @@ class Mongua(object):
         """
         神奇的函数, 查看用户发表的评论数
         u.data_count(Comment)
-        :return: int
         """
         name = cls.__name__
-        # TODO, 这里应该用 type 替代
         fk = '{}_id'.format(self.__class__.__name__.lower())
         query = {
             fk: self.id,

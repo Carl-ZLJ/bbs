@@ -1,4 +1,3 @@
-import time
 from models.mongua import Mongua
 
 

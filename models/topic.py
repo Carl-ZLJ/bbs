@@ -1,5 +1,7 @@
 from models.mongua import Mongua
 from models.user import User
+from models.reply import Reply
+from models.board import Board
 
 
 class Topic(Mongua):
@@ -21,12 +23,10 @@ class Topic(Mongua):
         return m
 
     def replies(self):
-        from .reply import Reply
         ms = Reply.find_all(topic_id=self.id)
         return ms
 
     def board(self):
-        from .board import Board
         m = Board.find(self.board_id)
         return m
 

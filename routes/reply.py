@@ -13,7 +13,7 @@ from models.reply import Reply
 main = Blueprint('reply', __name__)
 
 
-@main.route("/add", methods=["POST"])
+@main.route('/add', methods=['POST'])
 def add():
     form = request.form
     u = current_user()

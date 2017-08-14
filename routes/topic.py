@@ -20,7 +20,6 @@ csrf_tokens = dict()
 
 @main.route("/")
 def index():
-    # board_id = 2
     board_id = int(request.args.get('board_id', -1))
     if board_id == -1:
         ms = Topic.all()
@@ -30,21 +29,15 @@ def index():
     u = current_user()
     csrf_tokens[token] = u.id
     bs = Board.all()
-    return render_template("topic/index.html",
-                           ms=ms,
-                           token=token,
-                           bs=bs,
-                           u=u,
-                           bid=board_id,
-                           )
+    return render_template("topic/index.html", ms=ms, token=token, bs=bs, u=u, bid=board_id)
 
 
 @main.route('/<int:id>')
 def detail(id):
     u = current_user()
     t = Topic.get(id)
-    # 传递 topic 的所有 reply 到 页面中
-    return render_template("topic/detail.html", topic=t, u=u)
+    rs = t.replies()
+    return render_template("topic/detail.html", topic=t, u=u, replies=rs)
 
 
 @main.route("/add", methods=["POST"])

@@ -1,1 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
+.idea
+.vscode
+.vscode/
+__pycache__/app.cpython-34.pyc
+__pycache__/config.cpython-34.pyc
+__pycache__/utils.cpython-34.pyc
